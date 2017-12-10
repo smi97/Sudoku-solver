@@ -16,11 +16,11 @@ int main(int argc, char ** argv)
     output_path += ".ans";
 
     std::ifstream input_file(input_path);
-    std::ofstream output_file(output_path);
     try
     {
         Sudoku sud(input_file);
         sud.solve();
+        std::ofstream output_file(output_path);
         sud.print(output_file);
     }
     catch(std::string except)
