@@ -156,3 +156,11 @@
 * Easy, medium, another_medium, hard - судоку различной сложности. 
 * Hard_1 показывает, что программа имеет возможность решить судоку, имеющую более одного правильного решения(выводится первый корректный вариант). Hard_1 - это файл hard, в котором вместо одного из значений судоку - пустая ячейка. При решении получается другой, правильный вариант решения. Следовательно, у данной задачи(hard_1) - два решения и программа позволяет решить ее. 
 * Too_easy - пустой судоку. 
+
+Список использованных источников
+-
+
+1.  КАК РЕШАТЬ СУДОКУ — СПОСОБЫ, МЕТОДЫ И СТРАТЕГИЯ, BrainApps  [https://brainapps.ru/blog/2017/02/kak-reshat-sudoku-sposoby-metody-i-st-2/]()
+2. Латинский квадрат, Википедия [https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D1%82%D0%B8%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82]()
+3. Судоку, Википедия [https://ru.wikipedia.org/wiki/%D0%A1%D1%83%D0%B4%D0%BE%D0%BA%D1%83]()
+4. NP-completeness of SUDOKU, Department of Computer science, University of Oxford [http://www.cs.ox.ac.uk/people/paul.goldberg/FCS/sudoku.html]()
