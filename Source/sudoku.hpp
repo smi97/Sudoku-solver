@@ -3,6 +3,7 @@ class Sudoku
 private:
     std::vector<std::vector<std::vector<int>>> sudoku;
     bool rec_flag;
+    bool if_dig(char a);
 
     std::vector<int> check_row(std::vector<std::vector<std::vector<int>>> sud, int row);
     std::vector<int> check_column(std::vector<std::vector<std::vector<int>>> sud, int col);

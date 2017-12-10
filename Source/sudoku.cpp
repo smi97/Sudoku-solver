@@ -9,7 +9,7 @@
 
 int main(int argc, char ** argv)
 {
-    std::string input_path("input_"), output_path("output_");
+    std::string input_path("./tests/input_"), output_path("./tests/output_");
     input_path += argv[2];
     input_path += ".dat";
     output_path += argv[2];

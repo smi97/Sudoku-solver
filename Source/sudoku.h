@@ -1,4 +1,13 @@
 
+bool Sudoku::if_dig(char a)
+{
+    char b [] = {"1234567890"};
+    for(int i = 0; i < 10; i++)
+        if (a == b[i])
+            return true;
+    return false;
+}
+
 Sudoku::Sudoku(std::ifstream& input)
 {
     rec_flag = false;
@@ -15,11 +24,12 @@ Sudoku::Sudoku(std::ifstream& input)
     while(!input.eof() && row < 9)
     {
         input >> buf;
-        if(buf.empty())
+        if(buf.empty() || buf.size() != 1 || !if_dig(buf[0]))
         {
             std::string except("Ошибочный файл\n");
             throw except;
         }
+
         x = atoi(buf.c_str());
         sudoku[row][col].push_back(x);
         col++;
