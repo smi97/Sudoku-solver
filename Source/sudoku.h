@@ -1,8 +1,8 @@
 
 bool Sudoku::if_dig(char a)
 {
-    char b [] = {"1234567890"};
-    for(int i = 0; i < 10; i++)
+    char b [] = {"123456789"};
+    for(int i = 0; i < 9; i++)
         if (a == b[i])
             return true;
     return false;
