@@ -3,8 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <fstream>
-#include "sudoku.hpp"
-#include "sudoku.h"
+#include "sudoku_class.cpp"
 
 
 int main(int argc, char ** argv)
