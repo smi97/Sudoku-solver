@@ -1,3 +1,4 @@
+#include "sudoku_class.hpp"
 
 bool Sudoku::if_dig(char a)
 {
