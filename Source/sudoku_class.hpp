@@ -1,28 +1,31 @@
+#pragma once
+#include <deque>
+#include <string>
+#include <algorithm>
+#include <set>
+
+
 class Sudoku
 {
 private:
-    std::vector<std::vector<std::vector<int>>> sudoku;
+    std::deque<std::deque<int>> sudoku;
     bool rec_flag;
-    bool if_dig(char a);
+    bool if_dig(int a);
 
-    std::vector<int> check_row(std::vector<std::vector<std::vector<int>>> sud, int row);
-    std::vector<int> check_column(std::vector<std::vector<std::vector<int>>> sud, int col);
-    std::vector<int> check_square(std::vector<std::vector<std::vector<int>>> sud, int row, int col);
-    std::vector<int> merge_three(std::vector<int> row, std::vector<int> col, std::vector<int> sqr);
-    std::vector<int> check_xy(std::vector<std::vector<std::vector<int>>> sud, int row, int col);
-    void check_row_digs(std::vector<std::vector<std::vector<int>>> * sud, int row);
+    std::set<int> check_row(std::deque<std::deque<int>> sud, int row);
+    std::set<int> check_column(std::deque<std::deque<int>> sud, int col);
+    std::set<int> check_square(std::deque<std::deque<int>> sud, int row, int col);
+    std::set<int> check_xy(std::deque<std::deque<int>> sud, int row, int col);
 
-    void check_sud(std::vector<std::vector<std::vector<int>>> sud);
-
-    void print(std::vector<std::vector<std::vector<int>>> sud);
-
+    void check_sud(std::deque<std::deque<int>> sud);
 
 
 public:
-    Sudoku(std::ifstream& input);
-    void print(std::ofstream & output_file);
-    void solve();
+    Sudoku(std::deque<std::deque<int>> input);
 
+    std::deque<std::deque<int>> get();
+
+    void solve();
 };
 
 

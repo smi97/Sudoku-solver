@@ -1,195 +1,103 @@
 #include "sudoku_class.hpp"
 
-bool Sudoku::if_dig(char a)
-{
-    char b [] = {"123456789"};
-    for(int i = 0; i < 9; i++)
-        if (a == b[i])
-            return true;
-    return false;
-}
-
-Sudoku::Sudoku(std::ifstream& input)
+Sudoku::Sudoku(std::deque<std::deque<int>> input)
 {
     rec_flag = false;
     sudoku.resize(9);
-    for (int i = 0, size = sudoku.size(); i < size; ++i)   sudoku[i].resize(9);
-    std::string buf;
-    int x, row = 0, col = 0;
-    if (!input.is_open())
-    {
-        std::string except("Файл не может быть открыт\n");
-        throw except;
-    }
-
-    while(!input.eof() && row < 9)
-    {
-        input >> buf;
-        if(buf.empty() || buf.size() != 1 || !if_dig(buf[0]))
-        {
-            std::string except("Ошибочный файл\n");
-            throw except;
-        }
-
-        x = atoi(buf.c_str());
-        sudoku[row][col].push_back(x);
-        col++;
-        if(col == 9)
-        {
-            row++;
-            col = 0;
-        }
-    }
-
+    for (int i = 0, size = sudoku.size(); i < size; ++i)   sudoku[i] = input[i];
 }
 
-void Sudoku::print(std::ofstream & output_file)
+std::deque<std::deque<int>> Sudoku::get()
 {
-    for(std::vector<std::vector<std::vector<int>>>::iterator it = sudoku.begin(); it != sudoku.end(); it++)
-    {
-        for(std::vector<std::vector<int>>::iterator it1 = it->begin(); it1 != it->end(); it1++)
-        {
-            if(it1->front() != -1) output_file << it1->front();
-            else output_file << ".";
-            output_file << " ";
-        }
-        output_file << std::endl;
-    }
-    output_file << std::endl;
-
+    return sudoku;
 }
 
-std::vector<int> Sudoku::check_row(std::vector<std::vector<std::vector<int>>> sud, int row)
+std::set<int> Sudoku::check_row(std::deque<std::deque<int>> sud, int row)
 {
-    std::vector<int> b;
-    int pos = 0;
-    for(std::vector<std::vector<std::vector<int>>>::iterator it = sud.begin(); it != sud.end(); it++)
+    std::set<int> b;
+    for(auto it : sud[row])
     {
-        if (pos == row)
-        {
-            for(std::vector<std::vector<int>>::iterator it1 = it->begin(); it1 != it->end(); it1++)
-            {
-                if((it1->size() == 1) && (it1->front() != -1) )
-                    for(std::vector<int>::iterator it2 = it1->begin(); it2 != it1->end(); it2++)
-                    {
-                        b.push_back(*it2);
-                    }
-            }
-            break;
-        }
-        pos++;
+        if(it != -1)
+            b.insert(it);
     }
     return b;
 }
 
-std::vector<int> Sudoku::check_column(std::vector<std::vector<std::vector<int>>> sud, int col)
+std::set<int> Sudoku::check_column(std::deque<std::deque<int>> sud, int col)
 {
-    std::vector<int> b;
+    std::set<int> b;
 
-    for(std::vector<std::vector<std::vector<int>>>::iterator it = sud.begin(); it != sud.end(); it++)
+    for(int i = 0; i < sud.size(); i++)
     {
-        int pos = 0;
-        for(std::vector<std::vector<int>>::iterator it1 = it->begin(); it1 != it->end(); it1++)
-        {
-            if((it1->size() == 1) && (pos == col) && (it1->front() != -1))
-            {
-                for(std::vector<int>::iterator it2 = it1->begin(); it2 != it1->end(); it2++)
-                {
-                    b.push_back(*it2);
-                }
-                break;
-            }
-            pos++;
-        }
+        if(sud[i][col] != -1)
+            b.insert(sud[i][col]);
     }
-
     return b;
 }
 
-std::vector<int> Sudoku::check_square(std::vector<std::vector<std::vector<int>>> sud, int row, int col)
+std::set<int> Sudoku::check_square(std::deque<std::deque<int>> sud, int row, int col)
 {
     int beg_row = row - row % 3, end_row = row + (3 - row % 3);
     int beg_col = col - col % 3, end_col = col + (3 - col % 3);
     int pos_row = 0;
-    std::vector<int> b;
-    for(std::vector<std::vector<std::vector<int>>>::iterator it = sud.begin(); it != sud.end(); it++)
+    std::set<int> b;
+    for(int i = beg_row; i < end_row; i++)
     {
-        int pos_col = 0;
-        if ((pos_row >= beg_row) && (pos_row < end_row))
-            for(std::vector<std::vector<int>>::iterator it1 = it->begin(); it1 != it->end(); it1++)
-            {
-                if((pos_col >= beg_col) && (pos_col < end_col) &&  (it1->front() != -1))
-                    for(std::vector<int>::iterator it2 = it1->begin(); it2 != it1->end(); it2++)
-                    {
-                        b.push_back(*it2);
-                    }
-                pos_col++;
-            }
-        pos_row++;
+        for(int j = beg_col; j < end_col; j++)
+            if(sud[i][j] != -1)
+                b.insert(sud[i][j]);
     }
     return b;
 }
 
-std::vector<int> Sudoku::merge_three(std::vector<int> row, std::vector<int> col, std::vector<int> sqr)
-{
-    std::vector<int> vectorMerged, vectorMerged1;
-    sort(row.begin(), row.end());
-    sort(col.begin(), col.end());
-    sort(sqr.begin(), sqr.end());
-    vectorMerged.resize(row.size() + col.size());
-    merge(row.begin(),row.end(),col.begin(),col.end(),vectorMerged.begin());
-    vectorMerged1.resize(vectorMerged.size() + sqr.size());
-    merge(vectorMerged.begin(),vectorMerged.end(),sqr.begin(),sqr.end(),vectorMerged1.begin());
-    return vectorMerged1;
-}
 
-std::vector<int> Sudoku::check_xy(std::vector<std::vector<std::vector<int>>> sud, int row, int col)
+std::set<int> Sudoku::check_xy(std::deque<std::deque<int>> sud, int row, int col)
 {
-    std::vector<int> a, b, c, m;
-    a = check_row(sud, row);
-    b = check_column(sud, col);
-    c = check_square(sud, row, col);
-    m = merge_three(a, b, c);
+    std::set<int> rows, cols, squs, checked;
+    rows = check_row(sud, row);
+    cols = check_column(sud, col);
+    squs = check_square(sud, row, col);
+    rows.insert(cols.begin(), cols.end());
+    rows.insert(squs.begin(), squs.end());
+
     bool fl[9];
     for(int i = 0; i < 9; i++)
         fl[i] = true;
-    for(std::vector<int>::iterator it = m.begin(); it != m.end(); it++)
+    for(auto it : rows)
     {
-        fl[*it - 1] = false;
+        fl[it - 1] = false;
     }
-    m.clear();
     for(int i = 0; i < 9; i++)
-        if(fl[i]) m.push_back(i + 1);
-    return m;
+        if(fl[i]) checked.insert(i + 1);
+    return checked;
 }
 
-void Sudoku::check_sud(std::vector<std::vector<std::vector<int>>> sud)
+void Sudoku::check_sud(std::deque<std::deque<int>> sud)
 {
-
     if(rec_flag)
         return;
     int pos_row = 0;
     bool flag = true;
-    for(std::vector<std::vector<std::vector<int>>>::iterator it = sud.begin(); it != sud.end(); it++)
+    for(auto it = sud.begin(); it != sud.end(); it++)
     {
         int pos_col = 0;
-        for(std::vector<std::vector<int>>::iterator it1 = it->begin(); it1 != it->end(); it1++)
+        for(auto it1 = it->begin(); it1 != it->end(); it1++)
         {
-            if(it1->front() == -1)
+            if(*it1 == -1)
             {
                 flag = false;
-                std::vector<int> temp = check_xy(sud, pos_row, pos_col);
+                auto temp = check_xy(sud, pos_row, pos_col);
                 if(temp.size() == 1)
                 {
-                    it1->front() = temp.front();
+                    *it1 = *temp.begin();
                 }
                 if(temp.size() == 0)
                     return;
                 if(temp.size() > 1)
                 {
-                    for(std::vector<int>::iterator it2 = temp.begin(); it2 != temp.end(); it2++)
+                    for(auto it2 : temp)
                     {
-                        it1->front() = *it2;
+                        *it1 = it2;
                         check_sud(sud);
                         if(rec_flag)
                             return;
@@ -215,3 +123,4 @@ void Sudoku::solve()
 {
     check_sud(sudoku);
 }
+
