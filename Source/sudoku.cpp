@@ -17,7 +17,6 @@ int main(int argc, char ** argv)
     input_path += ".dat";
     output_path += argv[1];
     output_path += ".ans";
-    std::cout << input_path << std::endl;
     std::ifstream input_file(input_path);
     try
     {
