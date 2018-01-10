@@ -12,7 +12,6 @@ bool if_dig(int a);
 
 int main(int argc, char ** argv)
 {
-    unsigned int st_t, en_t, s_t;
     std::string input_path("./tests/input_"), output_path("./tests/output_");
     input_path += argv[1];
     input_path += ".dat";
@@ -24,11 +23,7 @@ int main(int argc, char ** argv)
     {
         std::deque<std::deque<int>> sudoku = set(input_file);
         Sudoku sud(sudoku);
-        st_t = clock();
         sud.solve();
-        en_t = clock();
-        s_t = en_t - st_t;
-        std::cout << s_t / 100.0 << std::endl;
         std::ofstream output_file(output_path);
         print(output_file, sud.get());
     }
