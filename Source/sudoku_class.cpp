@@ -30,58 +30,31 @@ void Sudoku::print(std::deque<std::deque<int>> sud)
 
 }
 
-std::set<int> Sudoku::check_row(std::deque<std::deque<int>> sud, int row)
+std::unordered_set<int> Sudoku::check_xy(std::deque<std::deque<int>> sud, int row, int col)
 {
-    std::set<int> b;
+    std::set<int> digs;
+    std::unordered_set<int> checked;
     for(auto it : sud[row])
     {
         if(it != -1)
-            b.insert(it);
+            digs.insert(it);
     }
-    return b;
-}
-
-std::set<int> Sudoku::check_column(std::deque<std::deque<int>> sud, int col)
-{
-    std::set<int> b;
-
     for(int i = 0; i < sud.size(); i++)
     {
         if(sud[i][col] != -1)
-            b.insert(sud[i][col]);
+            digs.insert(sud[i][col]);
     }
-    return b;
-}
-
-std::set<int> Sudoku::check_square(std::deque<std::deque<int>> sud, int row, int col)
-{
     int beg_row = row - row % 3, end_row = row + (3 - row % 3);
     int beg_col = col - col % 3, end_col = col + (3 - col % 3);
-    int pos_row = 0;
-    std::set<int> b;
     for(int i = beg_row; i < end_row; i++)
     {
         for(int j = beg_col; j < end_col; j++)
             if(sud[i][j] != -1)
-                b.insert(sud[i][j]);
+                digs.insert(sud[i][j]);
     }
-    return b;
-}
-
-
-std::unordered_set<int> Sudoku::check_xy(std::deque<std::deque<int>> sud, int row, int col)
-{
-    std::set<int> rows, cols, squs;
-    std::unordered_set<int> checked;
-    rows = check_row(sud, row);
-    cols = check_column(sud, col);
-    squs = check_square(sud, row, col);
-
     for(int i = 0; i < 9; i++)
     {
-        if(rows.find(i + 1) == rows.end() &&
-           cols.find(i + 1) == cols.end() &&
-           squs.find(i + 1) == squs.end())
+        if(digs.find(i + 1) == digs.end())
             checked.insert(i + 1);
     }
     return checked;
@@ -93,7 +66,6 @@ void Sudoku::check_sud(std::deque<std::deque<int>> sud)
         return;
 
     bool flag = true;
-
 
     for(int row = 0; row < sud.size(); row++)
     {
@@ -258,7 +230,6 @@ std::deque<std::deque<int>> Sudoku::check_col_ones(std::deque<std::deque<int>> s
                 }
             }
         }
-
         for(int i = 0; i < 9; i++)
         {
             if(mem[i] == 1)
